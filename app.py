@@ -35,8 +35,8 @@ if provider == "OpenAI":
     embeddings = OpenAIEmbeddings()
 else:
     os.environ["GOOGLE_API_KEY"] = api_key
-    llm_model = st.sidebar.selectbox("Model", ["gemini-1.5-flash", "gemini-1.5-pro"])
-    embeddings = GoogleGenerativeAIEmbeddings(model="models/embedding-001")
+    llm_model = st.sidebar.selectbox("Model", ["gemini-2.5-flash", "gemini-2.5-pro"])
+    embeddings = GoogleGenerativeAIEmbeddings(model="gemini-embedding-001")
 
 # --- AUTO-LOAD PERSISTENT VECTOR STORE ---
 if "vector_store" not in st.session_state:

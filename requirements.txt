@@ -1,0 +1,11 @@
+streamlit
+langchain
+langchain-community
+langchain-openai
+langchain-google-genai
+chromadb
+unstructured
+pdf2image
+pytesseract
+openpyxl
+python-docx

@@ -1,8 +1,8 @@
 import os
 import tempfile
 import streamlit as st
-from langchain.chains import create_retrieval_chain
-from langchain.chains.combine_documents import create_stuff_documents_chain
+from langchain_classic.chains import create_retrieval_chain
+from langchain_classic.chains.combine_documents import create_stuff_documents_chain
 from langchain_community.document_loaders import (
     UnstructuredFileLoader,
     UnstructuredImageLoader,
@@ -65,13 +65,11 @@ if st.sidebar.button("Process Documents") and api_key and uploaded_files:
         text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=200)
         
         for uploaded_file in uploaded_files:
-            # Save to a temporary file so LangChain loaders can process it
             with tempfile.NamedTemporaryFile(delete=False, suffix=f"_{uploaded_file.name}") as tmp_file:
                 tmp_file.write(uploaded_file.getvalue())
                 tmp_path = tmp_file.name
             
             try:
-                # Route images to UnstructuredImageLoader, others to UnstructuredFileLoader
                 if uploaded_file.type in ["image/png", "image/jpeg"]:
                     loader = UnstructuredImageLoader(tmp_path)
                 else:
@@ -87,7 +85,6 @@ if st.sidebar.button("Process Documents") and api_key and uploaded_files:
         if docs:
             split_docs = text_splitter.split_documents(docs)
             
-            # Store in local Chroma Vector DB with persistence
             st.session_state.vector_store = Chroma.from_documents(
                 documents=split_docs, 
                 embedding=embeddings, 
@@ -109,7 +106,6 @@ if user_query:
         with st.spinner("Searching Vector DB and generating answer..."):
             retriever = st.session_state.vector_store.as_retriever(search_kwargs={"k": 4})
             
-            # Setup LLM based on user selection
             if provider == "OpenAI":
                 llm = ChatOpenAI(model=llm_model, temperature=0.2)
             else:
